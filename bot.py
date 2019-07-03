@@ -3,19 +3,10 @@ import config
 from telebot import types
 import time
  
-token = '893243007:AAH9DnvnE8HvQYDuyM8B459ERu0s3RAPyns'
+token = '655758905:AAHW9Raxw0tQUVeN8PKaXRgIlMh5LqmeJGY'
 bot = telebot.TeleBot(token)
- 
- 
-def telepol():
-    try:
-        bot.polling(none_stop=True, timeout=60)
-    except:
-        bot.stop_polling()
-        time.sleep(10)
-        telepol()
- 
- 
+
+
 def invest(id):
     global my_list, n, sost, answers
     if config.n == 7:
@@ -23,7 +14,7 @@ def invest(id):
         s = ''
         for i in range(len(config.answers)):
             s += str(config.answers[i]) + '\n'
-        bot.send_message('@dannie_iz_bota', s)
+        bot.send_message('@loooolff', s)
     else:
         bot.send_message(id, my_list[config.n])
  
@@ -62,24 +53,25 @@ def handle_text(message):
         config.n = 0
         config.sost = 1
         config.answers = []
-        config.answers.append(message.chat.username)
-        config.answers.append('Для себя')
+        config.answers.append('от: ' + message.chat.username)
+        config.answers.append('для кого: Для себя')
         bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
     elif message.text == 'Я агент':
         config.n = 0
         config.sost = 1
-        config.answers.append(message.chat.username)
-        config.answers.append('Я агент')
+        config.answers.append('от: ' + message.chat.username)
+        config.answers.append('для кого: Я агент')
         bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
     elif message.text == 'Инвестиции':
-        config.answers.append('Инвестиции')
+        config.answers.append('цель: ' + 'Инвестиции')
         invest(message.chat.id)
     elif message.text == 'Проживание':
-        config.answers.append('Проживание')
+        config.answers.append('цель: ' + 'Проживание')
         invest(message.chat.id)
     else:
         if config.sost == 1:
-            config.answers.append(message.text)
+            config.m += 1
+            config.answers.append(config.lis[config.m] + message.text)
             config.n += 1
             invest(message.chat.id)
  
@@ -102,5 +94,5 @@ def keyboard3():
     return markup
  
  
-if __name__ == '__main__':
-    telepol()
+bot.polling(none_stop=True, interval=0)
+
