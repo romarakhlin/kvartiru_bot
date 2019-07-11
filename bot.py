@@ -105,7 +105,7 @@ def keyboard3():
     markup.add(button_1)
     return markup
 
-def keyboard2():
+def keyboard4():
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     button_1 = types.KeyboardButton('Продожить покупки')
     button_2 = types.KeyboardButton('На сегодня все')
