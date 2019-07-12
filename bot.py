@@ -3,17 +3,9 @@ import config
 from telebot import types
 import time
 
+
 token = '893243007:AAH9DnvnE8HvQYDuyM8B459ERu0s3RAPyns'
 bot = telebot.TeleBot(token)
-
-
-def telepol():
-	try:
-		bot.polling(none_stop=True, timeout=60)
-	except:
-		bot.stop_polling()
-		time.sleep(10)
-		telepol()
 
 
 def invest(id):
@@ -26,7 +18,6 @@ def invest(id):
 		bot.send_message('@dannie_iz_bota', s)
 	else:
 		bot.send_message(id, my_list[config.n])
-
 
 my_list = [
 	'Регион приобретения объекта: ',
@@ -43,7 +34,6 @@ my_list = [
 @bot.message_handler(commands=['start'])
 def handle_start(message):
 	bot.send_message(message.chat.id, 'Нажмите кнопку "Подобрать объект"', reply_markup=keyboard1())
-
 
 def keyboard1():
 	markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
@@ -102,5 +92,4 @@ def keyboard3():
 	return markup
 
 
-if __name__ == '__main__':
-	telepol()
+bot.polling(none_stop=True, timeout=60)
