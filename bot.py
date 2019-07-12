@@ -1,117 +1,106 @@
 import telebot
 import config
 from telebot import types
-import requests
+import time
 
-
-token = '655758905:AAHW9Raxw0tQUVeN8PKaXRgIlMh5LqmeJGY'
+token = '893243007:AAH9DnvnE8HvQYDuyM8B459ERu0s3RAPyns'
 bot = telebot.TeleBot(token)
 
 
-def bitok(id):
-    global listbit, n1, sost1, answers1
-    if config.n1 == 3:
-        bot.send_message(id, listbit[config.n1])
-        s = ''
-        for i in range(len(config.answers1)):
-            s += str(config.answers1[i]) + '\n'
-        bot.send_message('@rulechannell', s)
-    else:
-        bot.send_message(id, listbit[config.n1])
- 
-def exmo(id):
-    global listexmo, n2, sos2, answers2
-    if config.n2 == 2:
-        bot.send_message(id, listexmo[config.n2])
-        s = ''
-        for i in range(len(config.answers2)):
-            s += str(config.answers2[i]) + '\n'
-        bot.send_message('@rulechannell', s)
-    else:
-        bot.send_message(id, listexmo[config.n2])
+def telepol():
+	try:
+		bot.polling(none_stop=True, timeout=60)
+	except:
+		bot.stop_polling()
+		time.sleep(10)
+		telepol()
 
-listbit = [
-    'На какую сумму в RUB вы собираетесь приобретать BTC?',
-    '🔴 Чтобы продолжить заполнять заявку вы должны согласиться с указанными нижк правилами \n\n❗ Не хамите и не грубите операторам заявок ❗\n❗ Выполняйте все строго по инструкции ❗\n❗ При не соблюдении данных правил - оператор имеет право отказатся от дальнейшего с вами общения ❗\n\nНапишите "Понятно" для продолжения заполнения заявки.',
-    'Укажите свой BTC кошелек: ',
-    '🔴 В течении 10 мин с вами свяжется оператор \nОператор проверит указанные вами данные и выставит платеж \n\n Ожидайте сообщение оператора!!!'
-]
 
-listexmo = [
-    'На какую сумму в RUB вы собираетесь приобретать EXMO RUB?',
-    '🔴 Чтобы продолжить заполнять заявку вы должны согласиться с указанными нижк правилами \n\n❗ Не хамите и не грубите операторам заявок ❗\n❗ Выполняйте все строго по инструкции ❗\n❗ При не соблюдении данных правил - оператор имеет право отказатся от дальнейшего с вами общения ❗\n\nНапишите "Понятно" для продолжения заполнения заявки.',
-    '🔴 В течении 10 мин с вами свяжется оператор \nОператор проверит указанные вами данные и выставит платеж \n\n Ожидайте сообщение оператора!!!'
+def invest(id):
+	global my_list, n, sost, answers
+	if config.n == 7:
+		bot.send_message(id, my_list[config.n])
+		s = ''
+		for i in range(len(config.answers)):
+			s += str(config.answers[i]) + '\n'
+		bot.send_message('@dannie_iz_bota', s)
+	else:
+		bot.send_message(id, my_list[config.n])
+
+
+my_list = [
+	'Регион приобретения объекта: ',
+	'Стоимость объекта(До_____тыс.руб.):',
+	'Срок сдачи объекта не позднее:',
+	'Какие ещё пожелания?',
+	'Ваш Email?',
+	'Ваше Имя?',
+	'Ваш номер телефона?',
+	'Спасибо! Мы пришлём информацию вам на почту'
 ]
 
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    bot.send_message(message.chat.id, 'Меню:', reply_markup=keyboard1())
- 
- 
+	bot.send_message(message.chat.id, 'Нажмите кнопку "Подобрать объект"', reply_markup=keyboard1())
+
+
 def keyboard1():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    button_1 = types.KeyboardButton('Купить криптовалюту')
-    button_2 = types.KeyboardButton('Поддержка')
-    markup.add(button_1)
-    markup.add(button_2)
-    return markup
- 
- 
+	markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+	button_1 = types.KeyboardButton('Подобрать объект')
+	markup.add(button_1)
+	return markup
+
+
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    if message.text == 'Поддержка':
-        bot.send_message(message.chat.id, 'ТЕХ ПОДДЕРЖКА ' + '\n\nпо всем вопросам: ')
-    elif message.text == 'Купить криптовалюту':
-        bot.send_message(message.chat.id, 'Выберите криптовалюту: ', reply_markup=keyboard2())
-    elif message.text == 'Bitcoin (BTC)':
-        config.n1 = 0
-        config.sost1 = 1
-        config.answers1.append('от: ' + '@' + message.chat.username)
-        config.answers1.append('хочет: ' + 'BTC')
-        bitok(message.chat.id)
-    elif config.sost1 == 1:
-        config.m1 += 1
-        config.answers1.append(config.lis1[config.m1] + message.text)
-        config.n1 += 1
-        bitok(message.chat.id)
-    elif message.text == 'Exmo RUB':
-        config.n2 = 0
-        config.sost2 = 1
-        config.answers2.append('от: ' + '@' + message.chat.username)
-        config.answers2.append('хочет: ' + 'EXMO RUB')
-        exmo(message.chat.id)
-    elif config.sost2 == 1:
-        config.m2 += 1
-        config.answers2.append(config.lis2[config.m2] + message.text)
-        config.n2 += 1
-        exmo(message.chat.id)
-    elif config.sost1 == 4:
-        bot.send_message(message.chat.id, 'Что дальше?', reply_markup=keyboard4())
-    elif config.sost2 == 3:
-        bot.send_message(message.chat.id, 'Что дальше?', reply_markup=keyboard4())
+	global my_list, n, sost, answers
+	if message.text == 'Подобрать объект':
+		bot.send_message(message.chat.id, 'Заполните краткую анкету: ')
+		bot.send_message(message.chat.id, 'Для кого ведётся подбор?', reply_markup=keyboard2())
+	elif message.text == 'Для себя':
+		config.n = 0
+		config.sost = 1
+		config.answers = []
+		config.answers.append(message.chat.username)
+		config.answers.append('Для себя')
+		bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
+	elif message.text == 'Я агент':
+		config.n = 0
+		config.sost = 1
+		config.answers.append(message.chat.username)
+		config.answers.append('Я агент')
+		bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
+	elif message.text == 'Инвестиции':
+		config.answers.append('Инвестиции')
+		invest(message.chat.id)
+	elif message.text == 'Проживание':
+		config.answers.append('Проживание')
+		invest(message.chat.id)
+	else:
+		if config.sost == 1:
+			config.answers.append(message.text)
+			config.n += 1
+			invest(message.chat.id)
+
 
 def keyboard2():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    button_1 = types.KeyboardButton('Bitcoin (BTC)')
-    button_2 = types.KeyboardButton('Exmo RUB')
-    markup.add(button_1)
-    markup.add(button_2)
-    return markup
+	markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+	button_1 = types.KeyboardButton('Для себя')
+	button_2 = types.KeyboardButton('Я агент')
+	markup.add(button_1)
+	markup.add(button_2)
+	return markup
+
 
 def keyboard3():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    button_1 = types.KeyboardButton('Назад в меню')
-    markup.add(button_1)
-    return markup
-
-def keyboard4():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    button_1 = types.KeyboardButton('Продожить покупки')
-    button_2 = types.KeyboardButton('На сегодня все')
-    markup.add(button_1)
-    markup.add(button_2)
-    return markup
+	markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+	button_1 = types.KeyboardButton('Инвестиции')
+	button_2 = types.KeyboardButton('Проживание')
+	markup.add(button_1)
+	markup.add(button_2)
+	return markup
 
 
-bot.polling(none_stop=True, interval=0)
+if __name__ == '__main__':
+	telepol()
