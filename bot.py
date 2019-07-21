@@ -92,4 +92,4 @@ def keyboard3():
 	return markup
 
 
-bot.polling(none_stop=True, timeout=60)
+bot.polling(none_stop=True, interval=0)
