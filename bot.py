@@ -16,6 +16,7 @@ def invest(id):
 		for i in range(len(config.answers)):
 			s += str(config.answers[i]) + '\n'
 		bot.send_message('@dannie_iz_bota', s)
+		sost = 0
 	else:
 		bot.send_message(id, my_list[config.n])
 
