@@ -1,7 +1,5 @@
 import telebot
-import config
 from telebot import types
-import time
 
 
 token = '893243007:AAH9DnvnE8HvQYDuyM8B459ERu0s3RAPyns'
