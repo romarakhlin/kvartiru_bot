@@ -8,28 +8,44 @@ token = '893243007:AAH9DnvnE8HvQYDuyM8B459ERu0s3RAPyns'
 bot = telebot.TeleBot(token)
 
 
-def invest(id):
+answers = []
+sost = 0
+n = 0
+m = 0
+
+
+
+def sending(id, message):
 	global my_list, n, sost, answers
-	if config.n == 7:
-		bot.send_message(id, my_list[config.n])
+	if n == 8:
+		bot.send_message(id,'Спасибо! Мы пришлём информацию вам на почту')
+		answers.append('номер: ' + message.text)
 		s = ''
-		for i in range(len(config.answers)):
-			s += str(config.answers[i]) + '\n'
+		for i in range(len(answers)):
+			s += str(answers[i]) + '\n'
 		bot.send_message('@dannie_iz_bota', s)
 		sost = 0
-	else:
-		bot.send_message(id, my_list[config.n])
+	elif n == 1:
+		bot.send_message(id, 'Регион приобретения объекта: ')
+	elif n == 2:
+		bot.send_message(id, 'Стоимость объекта(До_____тыс.руб.): ')
+		answers.append('регион: ' + message.text)
+	elif n == 3:
+		bot.send_message(id, 'Срок сдачи объекта не позднее: ')
+		answers.append('стоимость: ' + message.text)
+	elif n == 4:
+		bot.send_message(id, 'Какие ещё пожелания?')
+		answers.append('срок: ' + message.text)
+	elif n == 5:
+		bot.send_message(id, 'Ваш Email?')
+		answers.append('пожелания: ' + message.text)
+	elif n == 6:
+		bot.send_message(id, 'Ваше Имя?')
+		answers.append('email: ' + message.text)
+	elif n == 7:
+		bot.send_message(id, 'Ваш номер телефона?')
+		answers.append('имя: ' + message.text)
 
-my_list = [
-	'Регион приобретения объекта: ',
-	'Стоимость объекта(До_____тыс.руб.):',
-	'Срок сдачи объекта не позднее:',
-	'Какие ещё пожелания?',
-	'Ваш Email?',
-	'Ваше Имя?',
-	'Ваш номер телефона?',
-	'Спасибо! Мы пришлём информацию вам на почту'
-]
 
 
 @bot.message_handler(commands=['start'])
@@ -50,29 +66,32 @@ def handle_text(message):
 		bot.send_message(message.chat.id, 'Заполните краткую анкету: ')
 		bot.send_message(message.chat.id, 'Для кого ведётся подбор?', reply_markup=keyboard2())
 	elif message.text == 'Для себя':
-		config.n = 0
-		config.sost = 1
-		config.answers = []
-		config.answers.append(message.chat.username)
-		config.answers.append('Для себя')
+		n = 0
+		sost = 1
+		answers = []
+		answers.append('@' + message.chat.username)
+		answers.append('для кого: Для себя')
 		bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
 	elif message.text == 'Я агент':
-		config.n = 0
-		config.sost = 1
-		config.answers.append(message.chat.username)
-		config.answers.append('Я агент')
+		n = 0
+		sost = 1
+		answers = []
+		answers.append('@' + message.chat.username)
+		answers.append('для кого: Я агент')
 		bot.send_message(message.chat.id, 'Цель покупки недвижимости?', reply_markup=keyboard3())
 	elif message.text == 'Инвестиции':
-		config.answers.append('Инвестиции')
-		invest(message.chat.id)
+		answers.append('цель: Инвестиции')
+		n += 1
+		sending(message.chat.id, message)
 	elif message.text == 'Проживание':
-		config.answers.append('Проживание')
-		invest(message.chat.id)
+		answers.append('цель: Проживание')
+		n += 1
+		sending(message.chat.id, message)
 	else:
-		if config.sost == 1:
-			config.answers.append(message.text)
-			config.n += 1
-			invest(message.chat.id)
+		if sost == 1:
+			n += 1
+			sending(message.chat.id, message)
+			print(answers)
 
 
 def keyboard2():
