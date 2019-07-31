@@ -89,7 +89,6 @@ def handle_text(message):
 		if sost == 1:
 			n += 1
 			sending(message.chat.id, message)
-			print(answers[n])
 
 
 def keyboard2():
